@@ -8,25 +8,15 @@ let MongoClient = require('mongodb').MongoClient;
 let session = require('express-session');
 const SocketIOFile = require('socket.io-file');
 
-app.use(express.static(__dirname + '/css'));
+
 
 const bodyParser = require('body-parser');
 
 
 
-app.get('/css/normalize.css', function(req, res){
-    res.sendFile(__dirname + '/css/normalize.css');
-});
 
 
-app.get('/css/main.css', function(req, res){
-    res.sendFile(__dirname + '/css/main.css');
-});
-
-app.use(express.static(__dirname+'/gennect'));
-app.use(express.static(__dirname+'/css'));
-app.use(express.static(__dirname+'/fonts'));
-app.use(express.static(__dirname+'/gfx'));
+app.use("/public", express.static(__dirname + '/public'));
 
 
 
