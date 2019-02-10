@@ -1,0 +1,8 @@
+{
+  "name": "gennect",
+  "description": "gennect",
+  "repository": "https://github.com/sparksflyupwards/gennect",
+  "logo": "gfx/Black_Logo-01.png",
+  "keywords": ["node", "express", "heroku"],
+  "image": "heroku/nodejs"
+}

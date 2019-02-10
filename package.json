@@ -1,0 +1,14 @@
+{
+  "name": "gennect",
+  "version": "0.0.1",
+  "description": "helping connect youth and elderly",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.15.2",
+    "express-session": "^1.15.6",
+    "mongodb": "^3.1.13",
+    "mongoose": "^5.4.10",
+    "socket.io": "^2.2.0",
+    "socket.io-file": "^2.0.3"
+  }
+}
