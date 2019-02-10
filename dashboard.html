@@ -64,14 +64,20 @@
                         <p>Hello this is a test of our patience</p>
                     </div>
                 </li>
+
+                <div class="clearFloat"></div>
+                <li class="messageTwo">
+                    <div class="textBoxTwo">
+                        <p>I am slowly going crazy...</p>
+                    </div>
+                    <img class="profileImgThree" src="public/gfx/gennect-teen-dp.png" alt="kyle"> </li>
+
+
             </ul>
+            <ul id="typing-prompt"></ul>
         </div>
-        <div class="clearFloat"></div>
-        <li class="messageTwo">
-            <div class="textBoxTwo">
-                <p>I am slowly going crazy...</p>
-            </div>
-            <img class="profileImgThree" src="public/gfx/gennect-teen-dp.png" alt="kyle"> </li>
+
+
         <div class="clearFloat"></div>
         <div class="forms">
             <form action="">
@@ -229,87 +235,64 @@
 
 
 
-        socket.on('connection message', function () {
-            if (!connected) {
-                socket.emit('connection response', username)
-                connected = true;
-            }
 
-        });
 
         $('form').submit(function(){
-            var message = username + ": " +  $('#m').val()
+
+            console.log("sub")
+           // var message = username + ": " +  $('#m').val()
+            let message = $('#m').val();
 
             socket.emit('chat message',message);
             $('#m').val('');
 
-            $('#messages').append($('<li>').text(message));
+            let cfloat = $('div');
+            cfloat.className="clearFloat";
+            //  $('#messages').append(cfloat);
+
+            let msgTwo = $('li');
+            msgTwo.className="messageTwo";
+            //  $('#messages').append(msgTwo);
+
+            let txtboxTwo = $('div');
+            txtboxTwo.className = "textBoxTwo";
+
+            let para = $('p');
+            console.log(message)
+            para.text(message);
             gotoBottom("messages");
             return false;
         });
 
         socket.on('chat message', function(msg){
-            $('#messages').append($('<li>').text(msg));
+
+
+
+
+            let cfloat = $('div');
+            cfloat.className="clearFloat";
+          //  $('#messages').append(cfloat);
+
+            let msgTwo = $('li');
+            msgTwo.className="messageTwo";
+          //  $('#messages').append(msgTwo);
+
+            let txtboxTwo = $('div');
+            txtboxTwo.className = "textBoxTwo";
+
+            let para = $('p');
+            console.log(msg)
+            para.text(msg);
+
+          //  txtboxTwo.append(para);
+
+         //   $('#messages').append(txtboxTwo);
             gotoBottom("messages");
         });
 
 
-        socket.on('disconnection message', function(){
-            // socket.emit("disconnection response",username)
-        });
-
-        var typing = false;
-        var timeout = undefined;
-
-        function timeoutFunction(){
-            typing = false;
-            socket.emit('no longer typing', username);
-            console.log("timeout")
-        }
 
 
-        $('#m').keyup(function () {
-
-            if (typing == false) {
-                typing = true
-                socket.emit('is typing', username);
-                timeout = setTimeout(timeoutFunction, 500);
-            } else {
-                clearTimeout(timeout);
-                timeout = setTimeout(timeoutFunction, 500);
-            }
-
-        });
-
-        socket.on('is typing', function(user_name){
-            $('#typing-prompt').empty();
-
-            user_typing = user_name;
-
-
-            $('#typing-prompt').append($('<li id='+user_typing+'>').text(user_typing+" is typing..."));
-            var istyping = new Typed('#'+user_typing, {
-                strings: [user_typing+" is typing..."],
-                typeSpeed: 30,
-                backSpeed: 10,
-                fadeOut: true,
-                startDelay: 400,
-                showCursor: false,
-                loop: true
-            });
-        });
-
-        socket.on('no longer typing', function(user_name){
-
-
-            user_typing = user_name;
-
-            console.log($('#'+user_typing).innerHTML);
-            $('#'+user_typing).remove();
-
-            user_typing ==""
-
-        });
 
 
         function gotoBottom(id){
@@ -321,147 +304,6 @@
 
         $("#messages").height=400;
 
-
-
-
-
-
-
-        //webkitURL is deprecated but nevertheless
-        URL = window.URL || window.webkitURL;
-
-        var gumStream; //stream from getUserMedia()
-        var rec; //Recorder.js object
-        var input; //MediaStreamAudioSourceNode we'll be recording
-
-// shim for AudioContext when it's not avb.
-        var AudioContext;
-        var audioContext; //new audio context to help us record
-
-        var recordButton = document.getElementById("recordButton");
-        var stopButton = document.getElementById("stopButton");
-        var pauseButton = document.getElementById("pauseButton");
-
-//add events to those 3 buttons
-        recordButton.addEventListener("click", startRecording);
-        stopButton.addEventListener("click", stopRecording);
-        pauseButton.addEventListener("click", pauseRecording);
-
-
-
-        function startRecording() {
-            AudioContext = window.AudioContext || window.webkitAudioContext;
-            audioContext = new AudioContext; //new audio context to help us record
-            console.log("recordButton clicked");
-
-            /*
-            Simple constraints object, for more advanced audio features see
-            <div class="video-container"><blockquote class="wp-embedded-content" data-secret="cVHlrYJoGD"><a href="https://addpipe.com/blog/audio-constraints-getusermedia/">Supported Audio Constraints in getUserMedia()</a></blockquote><iframe class="wp-embedded-content" sandbox="allow-scripts" security="restricted" style="position: absolute; clip: rect(1px, 1px, 1px, 1px);" src="https://addpipe.com/blog/audio-constraints-getusermedia/embed/#?secret=cVHlrYJoGD" data-secret="cVHlrYJoGD" width="600" height="338" title="“Supported Audio Constraints in getUserMedia()” — Pipe Blog" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe></div>
-            */
-
-            var constraints = { audio: true, video:false }
-
-            /*
-            Disable the record button until we get a success or fail from getUserMedia()
-            */
-
-            recordButton.disabled = true;
-            stopButton.disabled = false;
-            pauseButton.disabled = false
-
-            /*
-            We're using the standard promise based getUserMedia()
-            https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
-            */
-
-            navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
-                console.log("getUserMedia() success, stream created, initializing Recorder.js ...");
-
-                /* assign to gumStream for later use */
-                gumStream = stream;
-
-                /* use the stream */
-                input = audioContext.createMediaStreamSource(stream);
-
-                /*
-                Create the Recorder object and configure to record mono sound (1 channel)
-                Recording 2 channels  will double the file size
-                */
-                rec = new Recorder(input,{numChannels:1})
-
-                //start the recording process
-                rec.record()
-
-                console.log("Recording started");
-
-            }).catch(function(err) {
-                //enable the record button if getUserMedia() fails
-                recordButton.disabled = false;
-                stopButton.disabled = true;
-                pauseButton.disabled = true
-            });
-        }
-
-        function pauseRecording(){
-            console.log("pauseButton clicked rec.recording=",rec.recording );
-            if (rec.recording){
-                //pause
-                rec.stop();
-                pauseButton.innerHTML="Resume";
-            }else{
-                //resume
-                rec.record()
-                pauseButton.innerHTML="Pause";
-            }
-        }
-
-        function stopRecording() {
-            console.log("stopButton clicked");
-
-            //disable the stop button, enable the record too allow for new recordings
-            stopButton.disabled = true;
-            recordButton.disabled = false;
-            pauseButton.disabled = true;
-
-            //reset button just in case the recording is stopped while paused
-            pauseButton.innerHTML="Pause";
-
-            //tell the recorder to stop the recording
-            rec.stop();
-
-            //stop microphone access
-            gumStream.getAudioTracks()[0].stop();
-
-            //create the wav blob and pass it on to createDownloadLink
-            rec.exportWAV(createDownloadLink);
-        }
-
-        function createDownloadLink(blob) {
-
-            var url = URL.createObjectURL(blob);
-            var au = document.createElement('audio');
-            var li = document.createElement('li');
-            var link = document.createElement('a');
-
-            //add controls to the <audio> element
-            au.controls = true;
-            console.log(url)
-            au.src = url;
-
-            //link the a element to the blob
-            link.href = url;
-            link.download = new Date().toISOString() + '.wav';
-            link.innerHTML = link.download;
-            let uploadIds = uploader.upload(link.download, {
-                data: { /* Arbitrary data... */ }
-            });
-            //add the new audio and a elements to the li element
-            li.appendChild(au);
-            li.appendChild(link);
-
-            //add the li element to the ordered list
-            recordingsList.appendChild(li);
-        }
 
 
 

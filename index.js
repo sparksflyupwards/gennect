@@ -156,7 +156,9 @@ app.get('/', function(req, res){
 });
 
 
-
+app.get('/dashboard.html', function(req, res){
+    res.sendFile(__dirname + '/dashboard.html');
+});
 
 
 io.on('connection', function(socket){
@@ -179,30 +181,7 @@ io.on('connection', function(socket){
     });
 });
 
-io.on('connection',function(socket){
-    io.emit('connection message', "user connected");
-    socket.on('disconnect', function(){
-        io.emit('chat message', socket.name + " disconnected");
-    });
-
-    socket.on('connection response', function(user_name){  socket.name=user_name; io.emit('chat message', socket.name + " connected");});
-
-});
 
 
-
-io.on('connection', function(socket){
-    socket.on('is typing', function(user_name){
-        console.log('typing: ' + user_name);
-        socket.broadcast.emit('is typing', user_name);
-    });
-});
-
-io.on('connection', function(socket){
-    socket.on('no longer typing', function(user_name){
-        console.log('not typing: ' + user_name);
-        socket.broadcast.emit('no longer typing', user_name);
-    });
-});
 
 
